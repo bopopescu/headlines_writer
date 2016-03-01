@@ -1,21 +1,14 @@
 import nltk
+from textstat.textstat import textstat
 import random
 from nltk.parse.generate import generate
 from nltk import CFG
 
-titles = ["14 ways to derp a best friend", "5 ways to shave a cat"] 
+import tag_generator
 
-#tokenize
-tokenized_titles = []
-for title in titles:
-    tokenized = nltk.word_tokenize(title)
-    tokenized_titles.append(tokenized)
-
-#tag
-tagged_titles = []
-for title in tokenized_titles:
-    tagged = nltk.pos_tag(title)
-    tagged_titles.append(tagged)
+thefile = open('tagged_titles.txt', 'r')
+tagged_titles = eval(thefile.read())
+thefile.close()
 
 #flatten lists of tagged words
 all_tags = [item for sublist in tagged_titles for item in sublist]
@@ -40,11 +33,29 @@ start = str.join(" ", start_tag_list)
 
 #Build CFG
 cfg = "S -> " + start + "\n"
-for tag in start_tag_list:
-    terminal = random.choice(tag_word_map[tag])
+
+previous_word = ""
+for index, tag in enumerate(start_tag_list):
+    if index == 0:
+        terminal = random.choice(tag_word_map[tag])
+        previous_word = terminal
+    else:
+        terminal = random.choice(tag_generator.cfd[previous_word].most_common(1))[0]
+        choice = 1
+        while terminal not in tag_word_map[tag]:
+            terminal = random.choice(tag_generator.cfd[previous_word].most_common(choice))[0]
+            choice += 1
+
+        previous_word = terminal
+
     cfg += tag + " -> " + "'" + terminal + "'" + "\n"
 
+print cfg
+
 grammar = nltk.CFG.fromstring(cfg)
+
 for sentence in generate(grammar):
-    print(' '.join(sentence))
+    title = ' '.join(sentence)
+    #print title
+    #print (str(textstat.flesch_reading_ease(title)) + ": " + title)
 
