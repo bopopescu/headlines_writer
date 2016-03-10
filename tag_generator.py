@@ -23,7 +23,7 @@ titles = []
 posts = collection.find({}).limit(100)
 
 for post in posts:
-    titles.append(post['post_title'])
+    titles.append(post['post_title'].lower())
 
 #tokenize
 tokenizer = RegexpTokenizer(r"\w+'?\w+")
@@ -39,7 +39,6 @@ for title in titles:
 #    tagged = nltk.pos_tag(title)
 #    tagged_titles.append(tagged)
 #
-#
 #thefile = open('tagged_titles.txt', 'w')
 #thefile.write(str(tagged_titles))
 #thefile.close()
@@ -48,7 +47,7 @@ def generate_model(cfdist, word, num=random.randint(5, 10)):
     generated_title = word + ' '
     for i in range(num):
         if (cfdist[word]):
-            word = random.choice(cfdist[word].most_common(2))[0]
+            word = random.choice(cfdist[word].most_common(3))[0]
             generated_title += word + ' '
         else:
             break
@@ -62,5 +61,4 @@ for title in tokenized_titles:
 
 flat_all_bigrams = list(itertools.chain(*all_bigrams))
 cfd = nltk.ConditionalFreqDist(flat_all_bigrams) 
-generated_title = generate_model(cfd, random.choice(first_words))
 

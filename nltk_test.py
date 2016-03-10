@@ -1,8 +1,11 @@
 import nltk
 from textstat.textstat import textstat
+from nltk.tokenize import RegexpTokenizer
 import random
 from nltk.parse.generate import generate
 from nltk import CFG
+import math
+from nltk.corpus import stopwords
 
 import tag_generator
 
@@ -31,31 +34,50 @@ for word_tag_pair in tagged_titles:
 start_tag_list = random.choice(sentence_structures)
 start = str.join(" ", start_tag_list)
 
-#Build CFG
-cfg = "S -> " + start + "\n"
 
-previous_word = ""
-for index, tag in enumerate(start_tag_list):
-    if index == 0:
-        terminal = random.choice(tag_word_map[tag])
-        previous_word = terminal
-    else:
-        terminal = random.choice(tag_generator.cfd[previous_word].most_common(1))[0]
-        choice = 1
-        while terminal not in tag_word_map[tag]:
-            terminal = random.choice(tag_generator.cfd[previous_word].most_common(choice))[0]
-            choice += 1
+def comp(tag_sequence, generated_tag_sequence):
+    matches = 0
+    for index in range(len(tag_sequence)):
+        if len(generated_tag_sequence) > index:
+            if (tag_sequence[index] == generated_tag_sequence[index]):
+                matches += 1
+        else:
+            break
+            
+    return matches
 
-        previous_word = terminal
 
-    cfg += tag + " -> " + "'" + terminal + "'" + "\n"
+match_found = False
+while not match_found:
+    generated_title = (tag_generator.generate_model(tag_generator.cfd, random.choice(tag_generator.first_words))).lower()
 
-print cfg
+    tokenizer = RegexpTokenizer(r"\w+'?\w+")
+    tokenized = tokenizer.tokenize(generated_title)
+    last_word = tokenized[-1]
+    if(last_word in stopwords.words('english')):
+        continue
+    if generated_title in tag_generator.titles:
+        print "EXACT MATCH"
+        continue
 
-grammar = nltk.CFG.fromstring(cfg)
+    tagged = nltk.pos_tag(tokenized)
+    match_cutoff = int(math.ceil(len(tokenized) *.80))
 
-for sentence in generate(grammar):
-    title = ' '.join(sentence)
-    #print title
-    #print (str(textstat.flesch_reading_ease(title)) + ": " + title)
+    generated_structure = []
+    for word_tag_pair in tagged:
+        generated_structure.append(word_tag_pair[1])
+
+    nouns = ["NN", "NNS", "NNP", "NNPS"]
+
+    if(generated_structure[-1] not in nouns):
+        print "NON NOUN"
+        continue
+
+    for sentence_structure in sentence_structures:
+        match_count = comp(sentence_structure, generated_structure)
+        if match_count >= match_cutoff:
+            match_found = True
+            break
+
+print generated_title
 
