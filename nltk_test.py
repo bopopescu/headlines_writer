@@ -31,9 +31,7 @@ for word_tag_pair in tagged_titles:
         temp.append(pair[1])
     sentence_structures.append(temp)
 
-start_tag_list = random.choice(sentence_structures)
-start = str.join(" ", start_tag_list)
-
+sentence_structures = sentence_structures[tag_generator.rand:tag_generator.rand+100]
 
 def comp(tag_sequence, generated_tag_sequence):
     matches = 0
@@ -54,10 +52,17 @@ while not match_found:
     tokenizer = RegexpTokenizer(r"\w+'?\w+")
     tokenized = tokenizer.tokenize(generated_title)
     last_word = tokenized[-1]
+
     if(last_word in stopwords.words('english')):
+        print 'STOP WORD'
         continue
-    if generated_title in tag_generator.titles:
-        print "EXACT MATCH"
+
+    if generated_title in " ".join(tag_generator.titles):
+        print "MATCH"
+        continue
+
+    if len(generated_title.split()) < tag_generator.min_title_length:
+        print "TOO SHORT"
         continue
 
     tagged = nltk.pos_tag(tokenized)
@@ -69,8 +74,16 @@ while not match_found:
 
     nouns = ["NN", "NNS", "NNP", "NNPS"]
 
-    if(generated_structure[-1] not in nouns):
-        print "NON NOUN"
+    #if(generated_structure[-1] not in nouns):
+    #    print "NON NOUN"
+    #    continue
+
+    not_aloud = ["JJ", "CC", "CD", "DT", "JJS", "JJR", "TO", "IN", "LS", "MD", "PDT", "POS",
+                "PP", "PPS", "SYM", "UH", "VBD", "VBG", "VBN", "VBP", "VBZ", "WDT", "WP",
+                "WPS", "WRB"]
+
+    if(generated_structure[-1] in not_aloud):
+        print "NOPE"
         continue
 
     for sentence_structure in sentence_structures:
@@ -79,5 +92,5 @@ while not match_found:
             match_found = True
             break
 
-print generated_title
+print generated_title.title()
 

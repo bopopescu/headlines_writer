@@ -20,10 +20,25 @@ db = connection[MONGODB_DB]
 collection = db[MONGODB_COLLECTION]
 
 titles = []
-posts = collection.find({}).limit(100)
+posts = collection.find({})
 
 for post in posts:
-    titles.append(post['post_title'].lower())
+    titles.append(post['post_title'].lower().lstrip())
+
+rand = random.randint(0, len(titles) - 100) 
+titles = titles[rand:rand+100]
+
+min_title_length = 5
+max_title_length = 5
+for title in titles:
+    length = len(title.split())
+
+    if length > max_title_length:
+        max_title_length = length
+
+    if length < min_title_length:
+        min_title_length = length
+
 
 #tokenize
 tokenizer = RegexpTokenizer(r"\w+'?\w+")
@@ -43,11 +58,11 @@ for title in titles:
 #thefile.write(str(tagged_titles))
 #thefile.close()
 
-def generate_model(cfdist, word, num=random.randint(5, 10)):
+def generate_model(cfd, word, num=random.randint(min_title_length, max_title_length)):
     generated_title = word + ' '
     for i in range(num):
-        if (cfdist[word]):
-            word = random.choice(cfdist[word].most_common(3))[0]
+        if (cfd[word]):
+            word = random.choice(cfd[word].most_common(3))[0]
             generated_title += word + ' '
         else:
             break
