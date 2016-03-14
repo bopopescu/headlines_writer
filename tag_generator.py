@@ -41,7 +41,7 @@ for title in titles:
 
 
 #tokenize
-tokenizer = RegexpTokenizer(r"\w+'?\w+")
+tokenizer = RegexpTokenizer(r"\w+[^\w\s]?\w+")
 starting_words = []
 tokenized_titles = []
 for title in titles:
