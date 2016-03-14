@@ -39,7 +39,6 @@ for title in titles:
     if length < min_title_length:
         min_title_length = length
 
-
 #tokenize
 tokenizer = RegexpTokenizer(r"\w+[^\w\s]?\w+")
 starting_words = []
