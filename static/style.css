@@ -1,0 +1,35 @@
+h3 {
+	margin-bottom: 50px;
+}
+
+.title {
+	cursor: pointer;
+}
+
+.content-wrapper {
+	margin: auto;
+	text-align: center;
+}
+.generate {
+	margin-bottom: 50px;
+}
+
+.titles {
+	width: 800px;
+	margin: auto;
+}
+#top-title {
+	margin-bottom: 20px;
+}
+
+.answer-wrapper {
+	color: white;
+}
+
+.correct {
+	background: green;
+}
+
+.wrong {
+	background: red;
+}

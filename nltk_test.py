@@ -48,21 +48,22 @@ def comp(tag_sequence, generated_tag_sequence):
 match_found = False
 while not match_found:
     generated_title = (tag_generator.generate_model(tag_generator.cfd, random.choice(tag_generator.first_words))).lower()
+    #print "------- " + generated_title + " ---------"
 
     tokenizer = RegexpTokenizer(r"\w+'?\w+")
     tokenized = tokenizer.tokenize(generated_title)
     last_word = tokenized[-1]
 
     if(last_word in stopwords.words('english')):
-        print 'STOP WORD'
+        #print 'STOP WORD: ' + last_word
         continue
 
     if generated_title in " ".join(tag_generator.titles):
-        print "MATCH"
+        #print "MATCH"
         continue
 
     if len(generated_title.split()) < tag_generator.min_title_length:
-        print "TOO SHORT"
+    #    print "TOO SHORT"
         continue
 
     tagged = nltk.pos_tag(tokenized)
@@ -72,25 +73,23 @@ while not match_found:
     for word_tag_pair in tagged:
         generated_structure.append(word_tag_pair[1])
 
-    nouns = ["NN", "NNS", "NNP", "NNPS"]
-
-    #if(generated_structure[-1] not in nouns):
-    #    print "NON NOUN"
-    #    continue
-
     not_aloud = ["JJ", "CC", "CD", "DT", "JJS", "JJR", "TO", "IN", "LS", "MD", "PDT", "POS",
                 "PP", "PPS", "SYM", "UH", "VBD", "VBG", "VBN", "VBP", "VBZ", "WDT", "WP",
                 "WPS", "WRB"]
 
     if(generated_structure[-1] in not_aloud):
-        print "NOPE"
+        print "NOPE: " + generated_structure[-1]
         continue
 
     for sentence_structure in sentence_structures:
         match_count = comp(sentence_structure, generated_structure)
+        print "match count: " + match_count
         if match_count >= match_cutoff:
             match_found = True
             break
+        print sentence_structure + "--------" + generated_structure
+        print "Match count not satisfied!!!!"
+
 
 print generated_title.title()
 

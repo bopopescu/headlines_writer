@@ -46,6 +46,7 @@ tokenized_titles = []
 for title in titles:
     tokenized = tokenizer.tokenize(title)
     tokenized_titles.append(tokenized)
+print tokenized_titles
 
 #tag
 #tagged_titles = []
@@ -53,7 +54,7 @@ for title in titles:
 #    tagged = nltk.pos_tag(title)
 #    tagged_titles.append(tagged)
 #
-#thefile = open('tagged_titles.txt', 'w')
+#thefile = open('tagged_titles2.txt', 'w')
 #thefile.write(str(tagged_titles))
 #thefile.close()
 
@@ -61,7 +62,7 @@ def generate_model(cfd, word, num=random.randint(min_title_length, max_title_len
     generated_title = word + ' '
     for i in range(num):
         if (cfd[word]):
-            word = random.choice(cfd[word].most_common(3))[0]
+            word = random.choice(cfd[word].most_common(2))[0]
             generated_title += word + ' '
         else:
             break
