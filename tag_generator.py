@@ -1,12 +1,5 @@
-import nltk, re, pprint
-import random
-import pymongo
-import itertools
-from textstat.textstat import textstat
+import nltk, re, random, pymongo, itertools
 from nltk.tokenize import RegexpTokenizer
-
-from nltk.parse.generate import generate
-from nltk import CFG
 
 MONGODB_SERVER = "localhost"
 MONGODB_PORT = 27017
@@ -46,7 +39,6 @@ tokenized_titles = []
 for title in titles:
     tokenized = tokenizer.tokenize(title)
     tokenized_titles.append(tokenized)
-print tokenized_titles
 
 #tag
 #tagged_titles = []
@@ -62,7 +54,7 @@ def generate_model(cfd, word, num=random.randint(min_title_length, max_title_len
     generated_title = word + ' '
     for i in range(num):
         if (cfd[word]):
-            word = random.choice(cfd[word].most_common(2))[0]
+            word = random.choice(cfd[word].most_common(3))[0]
             generated_title += word + ' '
         else:
             break

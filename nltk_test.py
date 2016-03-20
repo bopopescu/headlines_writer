@@ -1,10 +1,5 @@
-import nltk
-from textstat.textstat import textstat
+import nltk, random, math
 from nltk.tokenize import RegexpTokenizer
-import random
-from nltk.parse.generate import generate
-from nltk import CFG
-import math
 from nltk.corpus import stopwords
 
 import tag_generator
@@ -48,22 +43,18 @@ def comp(tag_sequence, generated_tag_sequence):
 match_found = False
 while not match_found:
     generated_title = (tag_generator.generate_model(tag_generator.cfd, random.choice(tag_generator.first_words))).lower()
-    #print "------- " + generated_title + " ---------"
 
-    tokenizer = RegexpTokenizer(r"\w+'?\w+")
+    tokenizer = RegexpTokenizer(r"\w+[^\w\s]?\w+")
     tokenized = tokenizer.tokenize(generated_title)
     last_word = tokenized[-1]
 
     if(last_word in stopwords.words('english')):
-        #print 'STOP WORD: ' + last_word
         continue
 
     if generated_title in " ".join(tag_generator.titles):
-        #print "MATCH"
         continue
 
     if len(generated_title.split()) < tag_generator.min_title_length:
-    #    print "TOO SHORT"
         continue
 
     tagged = nltk.pos_tag(tokenized)
@@ -78,18 +69,14 @@ while not match_found:
                 "WPS", "WRB"]
 
     if(generated_structure[-1] in not_aloud):
-        print "NOPE: " + generated_structure[-1]
         continue
 
     for sentence_structure in sentence_structures:
         match_count = comp(sentence_structure, generated_structure)
-        print "match count: " + match_count
         if match_count >= match_cutoff:
             match_found = True
             break
-        print sentence_structure + "--------" + generated_structure
-        print "Match count not satisfied!!!!"
 
 
-print generated_title.title()
+print generated_title
 
