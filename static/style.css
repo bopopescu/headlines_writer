@@ -33,3 +33,7 @@ h3 {
 .wrong {
 	background: red;
 }
+
+.spinner {
+	display: none;
+}

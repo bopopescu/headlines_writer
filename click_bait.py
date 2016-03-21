@@ -3,6 +3,7 @@ from flask import render_template
 import pymongo
 import random
 import json
+import nltk_test
 
 MONGODB_SERVER = "localhost"
 MONGODB_PORT = 27017
@@ -26,7 +27,7 @@ def index():
 @app.route("/generate")
 def generate_title():
     real_post = random.choice(posts)["post_title"]
-    generated_post = "test 123"
+    generated_post = nltk_test.generate_title()
     return json.dumps({'generated': generated_post, 'real': real_post}, ensure_ascii=False).encode('utf8'),  200
 
 if __name__ == "__main__":
