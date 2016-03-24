@@ -4,6 +4,7 @@ h3 {
 
 .title {
 	cursor: pointer;
+	font-size: 24px !important;
 }
 
 .content-wrapper {
@@ -27,11 +28,11 @@ h3 {
 }
 
 .correct {
-	background: green;
+	background: #3c763d;
 }
 
 .wrong {
-	background: red;
+	background: #a94442;
 }
 
 .spinner {
