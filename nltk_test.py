@@ -79,5 +79,6 @@ def generate_title():
 
 
     print generated_title
+    reload(tag_generator)
     return generated_title
 
