@@ -4,19 +4,27 @@ function capitalizeEachWord(str) {
     });
 }
 
+$(function() {
+
+});
+
 $(document).ready(function() {
 	$answerWrapper = $(".answer-wrapper");
-	$answer = $(".answer");
-	$title = $(".title");
-	$spinner = $(".spinner");
+	  $answer = $(".answer");
+    $words = $(".words")
+	  $title = $(".title");
+	  $spinner = $(".spinner");
+
 
 	$('.generate').click(function(e) {
 		e.preventDefault;
-		$title.hide();
-		$spinner.show();
-		$answerWrapper.removeClass("correct");
-		$answerWrapper.removeClass("wrong");
-		$answer.text('');
+		  $title.hide();
+      $words.hide();
+
+		  $spinner.show();
+		  $answerWrapper.removeClass("correct");
+		  $answerWrapper.removeClass("wrong");
+		  $answer.text('');
 
 		$.get( "/generate", function( data ) {
 			var rand =  Math.floor(Math.random() * (1 - 0 + 1)) + 0;
@@ -30,10 +38,33 @@ $(document).ready(function() {
 				$( "#bottom-title" ).text( capitalizeEachWord(data.real.replace(/[.,"'?!`“”]/g,"")) );
 				$("#real").val('bottom-title');
 			}
-			$title.show();
-			$spinner.hide();
+			  $title.show();
+			  $spinner.hide();
+
+
+
+
 		}, "json");
 	});
+
+
+    $( 'a#process_input' ).bind('click', function() {
+				$.getJSON('/input_word', {
+				    inputword: $('input[name="inputword"]').val(),
+				}, function(data) {
+
+            var output="<ul>";
+            for (var i in data) {
+                output+="<li style=list-style-type:none;>" + data[i].simword + "  :  " + data[i].value + "</li>";
+            }
+
+            output+="</ul>";
+            $words.html(output);
+            $words.show();
+				});
+
+				return false;
+		});
 
 	$title.click(function(e) {
 		var answer = ""; 

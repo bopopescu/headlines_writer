@@ -7,6 +7,14 @@ h3 {
 	font-size: 24px !important;
 }
 
+.words {
+	cursor: pointer;
+	font-size: 18px !important;
+  margin: auto;
+	text-align: center;
+  color: red;
+}
+
 .content-wrapper {
 	margin: auto;
 	text-align: center;

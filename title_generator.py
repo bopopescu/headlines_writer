@@ -17,6 +17,7 @@ class TitleGenerator:
         titles = mongo_config.titles
         #choose random slice of 100 titles from dataset
         self.rand = random.randint(0, len(titles) - 100) 
+
         self.titles = titles[self.rand:self.rand+100]
         self.tokenized_titles_slice = self.tokenized_titles[self.rand:self.rand+100]
         self.tagged_titles_slice = self.tagged_titles[self.rand:self.rand+100]
