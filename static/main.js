@@ -48,9 +48,16 @@ $(document).ready(function() {
 	});
 
 
+    $.ajax({
+        url: "/input_word"
+        type: "POST"
+
+    });
+    
     $( 'a#process_input' ).bind('click', function() {
 				$.getJSON('/input_word', {
 				    inputword: $('input[name="inputword"]').val(),
+
 				}, function(data) {
 
             var output="<ul>";

@@ -1,12 +1,37 @@
+# -*- coding: utf-8 -*-
 from flask import Flask
 from flask import jsonify
 from flask import send_from_directory, request, Response
 from flask import render_template
 import title_generator as TG
 import json, random, mongo_config
+import gensim
+from gensim.corpora import WikiCorpus
+from gensim.models import Word2Vec
+from gensim.models.word2vec import LineSentence
+
 #from forms import LoginForm
 
 app = Flask(__name__)
+#vector_file = "data/all_vector"
+#model = gensim.models.Word2Vec.load_word2vec_format(vector_file, binary=False)
+
+def get_sim_words(word, model):
+
+    try:
+        ret = model.most_similar(word.decode('utf8'))
+
+    except Exception, e:
+
+        print e
+        return ret
+
+    res = []
+    for item in ret:
+        res.append(item[0].encode('utf8'))
+
+    return res
+
 
 @app.after_request
 def add_header(response):
@@ -30,15 +55,15 @@ def generate_title():
 
 @app.route("/input_word", methods = ['GET', 'POST'])
 def input_word():
+    try:
+        inputword = request.args.get('inputword', 0, type=str)
+        print "catch word: %s" % inputword
 
-	try:
-		lang = request.args.get('inputword', 0, type=str)
-		if lang.lower() == 'python':
-			return json.dumps([{'simword':'hi', 'value': 0.8}])
-		else:
-			return json.dumps([{'simword':'hello', 'value': 0.9}])
+        #sim_words = get_sim_words(word, model)
+        #return json.dumps([{'simword': "\n".join(sim_words), 'value': 0.8}])
+        return ""
 
-	except Exception as e:
+    except Exception as e:
 		return str(e)
 
 
