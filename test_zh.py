@@ -3,71 +3,9 @@ import nltk, random, math, re, itertools
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 from utils import  myutils
-from nltk.tokenize import RegexpTokenizer
 import re
-import jieba
 import corpus_data
 #myutils.set_ipython_encoding_utf8()
-
-
-# tokenize
-def tokenize_zh_line(zh_line, method='jieba'):
-    """
-    zh_line:
-    Chinese string line
-
-    method:
-    tokenize method , default using jieba
-
-    Returns:
-    token Chinese word list
-    """
-
-    try:
-        zh_line = zh_line.decode('utf8')
-        zh_line = zh_line.strip()
-        zh_line = " ".join(re.findall(ur'[\u4e00-\u9fff\w\_]+', zh_line))
-
-        tokenized_list = jieba.cut(zh_line, cut_all=False)
-
-        res = [ word for word in tokenized_list if word != ' ' ]
-
-
-        return res
-
-    except AttributeError, attr:
-        print zh_line
-        return []
-
-tokenized_titles = []
-for title in titles:
-    tokenized = tokenize_zh_line(title)
-    tokenized_titles.append(tokenized)
-
-
-
-# write tokenize to file
-tokenized_file = open("data/tokenized", "w")
-tokenized_file.write(str(tokenized_titles))
-tokenized_file.close()
-
-
-# taging
-tagged_titles = []
-for title in tokenized_titles:
-    tagged = nltk.pos_tag(title)
-    tagged_titles.append(tagged)
-
-
-# taging multithread version
-tagged_titles = myutils.multi_thread_pool(nltk.pos_tag, tokenized_titles, 8)
-
-
-# write tags to file
-thefile = open('tagged', 'w')
-thefile.write(str(tagged_titles))
-thefile.close()
-
 
 class TitleGenerator:
 
@@ -170,7 +108,7 @@ class TitleGenerator:
             generated_title = self.build_title()
 
             #tokenize and tag generated title
-            tokenized = tokenize_zh_line(generated_title)
+            tokenized = myutils.tokenize_zh_line(generated_title)
             last_word = tokenized[-1]
             tagged = nltk.pos_tag(tokenized)
 
