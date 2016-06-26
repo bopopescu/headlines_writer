@@ -47,13 +47,6 @@ $(document).ready(function() {
 		}, "json");
 	});
 
-
-    $.ajax({
-        url: "/input_word"
-        type: "POST"
-
-    });
-    
     $( 'a#process_input' ).bind('click', function() {
 				$.getJSON('/input_word', {
 				    inputword: $('input[name="inputword"]').val(),

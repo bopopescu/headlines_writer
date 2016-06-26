@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import nltk, random, math, mongo_config, re, itertools
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
